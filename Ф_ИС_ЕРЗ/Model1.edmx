@@ -1,0 +1,632 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище Model" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="ДПФС">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_ЗЛ" Type="int" Nullable="false" />
+          <Property Name="Дата_выдачи" Type="date" Nullable="false" />
+          <Property Name="Тип" Type="char" MaxLength="23" Nullable="false" />
+          <Property Name="Срок_действия" Type="date" />
+          <Property Name="Номер_бланка" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Застрахованное лицо">
+          <Key>
+            <PropertyRef Name="ID_ЗЛ" />
+          </Key>
+          <Property Name="ID_ЗЛ" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "ИС ЕРЗ.dbo.Коды субъектов" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="Коды субъектов">
+          <Key>
+            <PropertyRef Name="Код" />
+            <PropertyRef Name="Название" />
+          </Key>
+          <Property Name="Код" Type="int" Nullable="false" />
+          <Property Name="Название" Type="char" MaxLength="60" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Персоналные данные">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Фамилия" Type="char" MaxLength="20" Nullable="false" />
+          <Property Name="Имя" Type="char" MaxLength="20" Nullable="false" />
+          <Property Name="Отчество" Type="char" MaxLength="20" Nullable="false" />
+          <Property Name="Пол" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="Дата_рождения" Type="date" Nullable="false" />
+          <Property Name="Дата_смерти" Type="date" Nullable="false" />
+          <Property Name="Тип_документа" Type="char" MaxLength="21" Nullable="false" />
+          <Property Name="Номер" Type="char" MaxLength="6" Nullable="false" />
+          <Property Name="ЕНП" Type="char" MaxLength="16" Nullable="false" />
+          <Property Name="Дата_начала" Type="date" Nullable="false" />
+          <Property Name="Серия" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="ID_ЗЛ" Type="int" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="СМО">
+          <Key>
+            <PropertyRef Name="ID_СМО" />
+          </Key>
+          <Property Name="ID_СМО" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Название" Type="char" MaxLength="50" Nullable="false" />
+          <Property Name="Код_субъекта" Type="int" Nullable="false" />
+          <Property Name="Субъект федерации" Type="char" MaxLength="60" />
+        </EntityType>
+        <EntityType Name="Состтояние на учёте">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_ЗЛ" Type="int" Nullable="false" />
+          <Property Name="Дата_постановки" Type="date" Nullable="false" />
+          <Property Name="Дата_снятия" Type="date" />
+          <Property Name="ID_СМО" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ДПФС_Застрахованное лицо">
+          <End Role="Застрахованное лицо" Type="Self.Застрахованное лицо" Multiplicity="1" />
+          <End Role="ДПФС" Type="Self.ДПФС" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Застрахованное лицо">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Principal>
+            <Dependent Role="ДПФС">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Застрахованное лицо_Застрахованное лицо">
+          <End Role="Застрахованное лицо" Type="Self.Застрахованное лицо" Multiplicity="1" />
+          <End Role="Застрахованное лицо1" Type="Self.Застрахованное лицо" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Застрахованное лицо">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Principal>
+            <Dependent Role="Застрахованное лицо1">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Персоналные данные_Застрахованное лицо">
+          <End Role="Застрахованное лицо" Type="Self.Застрахованное лицо" Multiplicity="0..1" />
+          <End Role="Персоналные данные" Type="Self.Персоналные данные" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Застрахованное лицо">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Principal>
+            <Dependent Role="Персоналные данные">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Состтояние на учёте_Застрахованное лицо">
+          <End Role="Застрахованное лицо" Type="Self.Застрахованное лицо" Multiplicity="1" />
+          <End Role="Состтояние на учёте" Type="Self.Состтояние на учёте" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Застрахованное лицо">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Principal>
+            <Dependent Role="Состтояние на учёте">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Состтояние на учёте_СМО">
+          <End Role="СМО" Type="Self.СМО" Multiplicity="1" />
+          <End Role="Состтояние на учёте" Type="Self.Состтояние на учёте" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="СМО">
+              <PropertyRef Name="ID_СМО" />
+            </Principal>
+            <Dependent Role="Состтояние на учёте">
+              <PropertyRef Name="ID_СМО" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Выбор_СМО" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Дата_рождения" Type="date" Mode="In" />
+          <Parameter Name="Фамилия" Type="char" Mode="In" />
+          <Parameter Name="Имя" Type="char" Mode="In" />
+          <Parameter Name="Отчество" Type="char" Mode="In" />
+          <Parameter Name="Пол" Type="char" Mode="In" />
+          <Parameter Name="Номер_паспорта" Type="char" Mode="In" />
+          <Parameter Name="Серия_паспорта" Type="char" Mode="In" />
+          <Parameter Name="СМО" Type="char" Mode="In" />
+          <Parameter Name="Регион" Type="char" Mode="In" />
+        </Function>
+        <Function Name="Добавление_пользователя" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="flag" Type="int" Mode="In" />
+          <Parameter Name="Фамилия" Type="char" Mode="In" />
+          <Parameter Name="Имя" Type="char" Mode="In" />
+          <Parameter Name="Отчество" Type="char" Mode="In" />
+          <Parameter Name="Пол" Type="char" Mode="In" />
+          <Parameter Name="Дата_рождения" Type="date" Mode="In" />
+          <Parameter Name="Тип_документа" Type="char" Mode="In" />
+          <Parameter Name="Номер" Type="char" Mode="In" />
+          <Parameter Name="Серия" Type="char" Mode="In" />
+          <Parameter Name="Название_СМО" Type="char" Mode="In" />
+          <Parameter Name="Название_региона" Type="char" Mode="In" />
+        </Function>
+        <Function Name="Изменение_паспорта" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="flag" Type="int" Mode="In" />
+          <Parameter Name="Имя" Type="char" Mode="In" />
+          <Parameter Name="Фамилия" Type="char" Mode="In" />
+          <Parameter Name="Отчество" Type="char" Mode="In" />
+          <Parameter Name="НовИмя" Type="char" Mode="In" />
+          <Parameter Name="НовФамилия" Type="char" Mode="In" />
+          <Parameter Name="НовОтчество" Type="char" Mode="In" />
+          <Parameter Name="Серия_паспорта" Type="char" Mode="In" />
+          <Parameter Name="Номер_паспорта" Type="char" Mode="In" />
+        </Function>
+        <Function Name="Поиск" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
+          <Parameter Name="Имя" Type="char" Mode="In" />
+          <Parameter Name="Фамилия" Type="char" Mode="In" />
+          <Parameter Name="Отчество" Type="char" Mode="In" />
+        </Function>
+        <EntityContainer Name="Хранилище ModelContainer">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ДПФС" EntityType="Self.ДПФС" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Застрахованное лицо" EntityType="Self.Застрахованное лицо" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Персоналные данные" EntityType="Self.Персоналные данные" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="СМО" EntityType="Self.СМО" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Состтояние на учёте" EntityType="Self.Состтояние на учёте" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Коды субъектов" EntityType="Self.Коды субъектов" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Коды субъектов].[Код] AS [Код], 
+    [Коды субъектов].[Название] AS [Название]
+    FROM [dbo].[Коды субъектов] AS [Коды субъектов]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_ДПФС_Застрахованное лицо" Association="Self.FK_ДПФС_Застрахованное лицо">
+            <End Role="Застрахованное лицо" EntitySet="Застрахованное лицо" />
+            <End Role="ДПФС" EntitySet="ДПФС" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Застрахованное лицо_Застрахованное лицо" Association="Self.FK_Застрахованное лицо_Застрахованное лицо">
+            <End Role="Застрахованное лицо" EntitySet="Застрахованное лицо" />
+            <End Role="Застрахованное лицо1" EntitySet="Застрахованное лицо" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Персоналные данные_Застрахованное лицо" Association="Self.FK_Персоналные данные_Застрахованное лицо">
+            <End Role="Застрахованное лицо" EntitySet="Застрахованное лицо" />
+            <End Role="Персоналные данные" EntitySet="Персоналные данные" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Состтояние на учёте_Застрахованное лицо" Association="Self.FK_Состтояние на учёте_Застрахованное лицо">
+            <End Role="Застрахованное лицо" EntitySet="Застрахованное лицо" />
+            <End Role="Состтояние на учёте" EntitySet="Состтояние на учёте" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Состтояние на учёте_СМО" Association="Self.FK_Состтояние на учёте_СМО">
+            <End Role="СМО" EntitySet="СМО" />
+            <End Role="Состтояние на учёте" EntitySet="Состтояние на учёте" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="ДПФС">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_ЗЛ" Type="Int32" Nullable="false" />
+          <Property Name="Дата_выдачи" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Тип" Type="String" MaxLength="23" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Срок_действия" Type="DateTime" Precision="0" />
+          <Property Name="Номер_бланка" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Застрахованное_лицо" Relationship="Self.FK_ДПФС_Застрахованное_лицо" FromRole="ДПФС" ToRole="Застрахованное_лицо" />
+        </EntityType>
+        <EntityType Name="Застрахованное_лицо">
+          <Key>
+            <PropertyRef Name="ID_ЗЛ" />
+          </Key>
+          <Property Name="ID_ЗЛ" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="ДПФС" Relationship="Self.FK_ДПФС_Застрахованное_лицо" FromRole="Застрахованное_лицо" ToRole="ДПФС" />
+          <NavigationProperty Name="Застрахованное_лицо1" Relationship="Self.FK_Застрахованное_лицо_Застрахованное_лицо" FromRole="Застрахованное_лицо" ToRole="Застрахованное_лицо1" />
+          <NavigationProperty Name="Застрахованное_лицо2" Relationship="Self.FK_Застрахованное_лицо_Застрахованное_лицо" FromRole="Застрахованное_лицо1" ToRole="Застрахованное_лицо" />
+          <NavigationProperty Name="Персоналные_данные" Relationship="Self.FK_Персоналные_данные_Застрахованное_лицо" FromRole="Застрахованное_лицо" ToRole="Персоналные_данные" />
+          <NavigationProperty Name="Состтояние_на_учёте" Relationship="Self.FK_Состтояние_на_учёте_Застрахованное_лицо" FromRole="Застрахованное_лицо" ToRole="Состтояние_на_учёте" />
+        </EntityType>
+        <EntityType Name="Персоналные_данные">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Фамилия" Type="String" MaxLength="20" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Имя" Type="String" MaxLength="20" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Отчество" Type="String" MaxLength="20" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Пол" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Дата_рождения" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Дата_смерти" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Тип_документа" Type="String" MaxLength="21" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Номер" Type="String" MaxLength="6" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="ЕНП" Type="String" MaxLength="16" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Дата_начала" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Серия" Type="String" MaxLength="4" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="ID_ЗЛ" Type="Int32" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Застрахованное_лицо" Relationship="Self.FK_Персоналные_данные_Застрахованное_лицо" FromRole="Персоналные_данные" ToRole="Застрахованное_лицо" />
+        </EntityType>
+        <EntityType Name="СМО">
+          <Key>
+            <PropertyRef Name="ID_СМО" />
+          </Key>
+          <Property Name="ID_СМО" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Название" Type="String" MaxLength="50" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Код_субъекта" Type="Int32" Nullable="false" />
+          <Property Name="Субъект_федерации" Type="String" MaxLength="60" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Состтояние_на_учёте" Relationship="Self.FK_Состтояние_на_учёте_СМО" FromRole="СМО" ToRole="Состтояние_на_учёте" />
+        </EntityType>
+        <EntityType Name="Состтояние_на_учёте">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_ЗЛ" Type="Int32" Nullable="false" />
+          <Property Name="Дата_постановки" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Дата_снятия" Type="DateTime" Precision="0" />
+          <Property Name="ID_СМО" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Застрахованное_лицо" Relationship="Self.FK_Состтояние_на_учёте_Застрахованное_лицо" FromRole="Состтояние_на_учёте" ToRole="Застрахованное_лицо" />
+          <NavigationProperty Name="СМО" Relationship="Self.FK_Состтояние_на_учёте_СМО" FromRole="Состтояние_на_учёте" ToRole="СМО" />
+        </EntityType>
+        <EntityType Name="Коды_субъектов">
+          <Key>
+            <PropertyRef Name="Код" />
+            <PropertyRef Name="Название" />
+          </Key>
+          <Property Name="Код" Type="Int32" Nullable="false" />
+          <Property Name="Название" Type="String" MaxLength="60" FixedLength="true" Unicode="false" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ДПФС_Застрахованное_лицо">
+          <End Role="Застрахованное_лицо" Type="Self.Застрахованное_лицо" Multiplicity="1" />
+          <End Role="ДПФС" Type="Self.ДПФС" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Застрахованное_лицо">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Principal>
+            <Dependent Role="ДПФС">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Застрахованное_лицо_Застрахованное_лицо">
+          <End Role="Застрахованное_лицо" Type="Self.Застрахованное_лицо" Multiplicity="1" />
+          <End Role="Застрахованное_лицо1" Type="Self.Застрахованное_лицо" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Застрахованное_лицо">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Principal>
+            <Dependent Role="Застрахованное_лицо1">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Персоналные_данные_Застрахованное_лицо">
+          <End Role="Застрахованное_лицо" Type="Self.Застрахованное_лицо" Multiplicity="0..1" />
+          <End Role="Персоналные_данные" Type="Self.Персоналные_данные" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Застрахованное_лицо">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Principal>
+            <Dependent Role="Персоналные_данные">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Состтояние_на_учёте_Застрахованное_лицо">
+          <End Role="Застрахованное_лицо" Type="Self.Застрахованное_лицо" Multiplicity="1" />
+          <End Role="Состтояние_на_учёте" Type="Self.Состтояние_на_учёте" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Застрахованное_лицо">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Principal>
+            <Dependent Role="Состтояние_на_учёте">
+              <PropertyRef Name="ID_ЗЛ" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Состтояние_на_учёте_СМО">
+          <End Role="СМО" Type="Self.СМО" Multiplicity="1" />
+          <End Role="Состтояние_на_учёте" Type="Self.Состтояние_на_учёте" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="СМО">
+              <PropertyRef Name="ID_СМО" />
+            </Principal>
+            <Dependent Role="Состтояние_на_учёте">
+              <PropertyRef Name="ID_СМО" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ИС_ЕРЗEntities2" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="ДПФС" EntityType="Self.ДПФС" />
+          <EntitySet Name="Застрахованное_лицо" EntityType="Self.Застрахованное_лицо" />
+          <EntitySet Name="Персоналные_данные" EntityType="Self.Персоналные_данные" />
+          <EntitySet Name="СМО" EntityType="Self.СМО" />
+          <EntitySet Name="Состтояние_на_учёте" EntityType="Self.Состтояние_на_учёте" />
+          <EntitySet Name="Коды_субъектов" EntityType="Self.Коды_субъектов" />
+          <AssociationSet Name="FK_ДПФС_Застрахованное_лицо" Association="Self.FK_ДПФС_Застрахованное_лицо">
+            <End Role="Застрахованное_лицо" EntitySet="Застрахованное_лицо" />
+            <End Role="ДПФС" EntitySet="ДПФС" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Застрахованное_лицо_Застрахованное_лицо" Association="Self.FK_Застрахованное_лицо_Застрахованное_лицо">
+            <End Role="Застрахованное_лицо" EntitySet="Застрахованное_лицо" />
+            <End Role="Застрахованное_лицо1" EntitySet="Застрахованное_лицо" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Персоналные_данные_Застрахованное_лицо" Association="Self.FK_Персоналные_данные_Застрахованное_лицо">
+            <End Role="Застрахованное_лицо" EntitySet="Застрахованное_лицо" />
+            <End Role="Персоналные_данные" EntitySet="Персоналные_данные" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Состтояние_на_учёте_Застрахованное_лицо" Association="Self.FK_Состтояние_на_учёте_Застрахованное_лицо">
+            <End Role="Застрахованное_лицо" EntitySet="Застрахованное_лицо" />
+            <End Role="Состтояние_на_учёте" EntitySet="Состтояние_на_учёте" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Состтояние_на_учёте_СМО" Association="Self.FK_Состтояние_на_учёте_СМО">
+            <End Role="СМО" EntitySet="СМО" />
+            <End Role="Состтояние_на_учёте" EntitySet="Состтояние_на_учёте" />
+          </AssociationSet>
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(Model.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(Model.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+          <FunctionImport Name="Выбор_СМО">
+            <Parameter Name="Дата_рождения" Mode="In" Type="DateTime" />
+            <Parameter Name="Фамилия" Mode="In" Type="String" />
+            <Parameter Name="Имя" Mode="In" Type="String" />
+            <Parameter Name="Отчество" Mode="In" Type="String" />
+            <Parameter Name="Пол" Mode="In" Type="String" />
+            <Parameter Name="Номер_паспорта" Mode="In" Type="String" />
+            <Parameter Name="Серия_паспорта" Mode="In" Type="String" />
+            <Parameter Name="СМО" Mode="In" Type="String" />
+            <Parameter Name="Регион" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Добавление_пользователя">
+            <Parameter Name="flag" Mode="In" Type="Int32" />
+            <Parameter Name="Фамилия" Mode="In" Type="String" />
+            <Parameter Name="Имя" Mode="In" Type="String" />
+            <Parameter Name="Отчество" Mode="In" Type="String" />
+            <Parameter Name="Пол" Mode="In" Type="String" />
+            <Parameter Name="Дата_рождения" Mode="In" Type="DateTime" />
+            <Parameter Name="Тип_документа" Mode="In" Type="String" />
+            <Parameter Name="Номер" Mode="In" Type="String" />
+            <Parameter Name="Серия" Mode="In" Type="String" />
+            <Parameter Name="Название_СМО" Mode="In" Type="String" />
+            <Parameter Name="Название_региона" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Изменение_паспорта">
+            <Parameter Name="flag" Mode="In" Type="Int32" />
+            <Parameter Name="Имя" Mode="In" Type="String" />
+            <Parameter Name="Фамилия" Mode="In" Type="String" />
+            <Parameter Name="Отчество" Mode="In" Type="String" />
+            <Parameter Name="НовИмя" Mode="In" Type="String" />
+            <Parameter Name="НовФамилия" Mode="In" Type="String" />
+            <Parameter Name="НовОтчество" Mode="In" Type="String" />
+            <Parameter Name="Серия_паспорта" Mode="In" Type="String" />
+            <Parameter Name="Номер_паспорта" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище ModelContainer" CdmEntityContainer="ИС_ЕРЗEntities2">
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="Model.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ДПФС">
+            <EntityTypeMapping TypeName="Model.ДПФС">
+              <MappingFragment StoreEntitySet="ДПФС">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ID_ЗЛ" ColumnName="ID_ЗЛ" />
+                <ScalarProperty Name="Дата_выдачи" ColumnName="Дата_выдачи" />
+                <ScalarProperty Name="Тип" ColumnName="Тип" />
+                <ScalarProperty Name="Срок_действия" ColumnName="Срок_действия" />
+                <ScalarProperty Name="Номер_бланка" ColumnName="Номер_бланка" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Застрахованное_лицо">
+            <EntityTypeMapping TypeName="Model.Застрахованное_лицо">
+              <MappingFragment StoreEntitySet="Застрахованное лицо">
+                <ScalarProperty Name="ID_ЗЛ" ColumnName="ID_ЗЛ" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Персоналные_данные">
+            <EntityTypeMapping TypeName="Model.Персоналные_данные">
+              <MappingFragment StoreEntitySet="Персоналные данные">
+                <ScalarProperty Name="Фамилия" ColumnName="Фамилия" />
+                <ScalarProperty Name="Имя" ColumnName="Имя" />
+                <ScalarProperty Name="Отчество" ColumnName="Отчество" />
+                <ScalarProperty Name="Пол" ColumnName="Пол" />
+                <ScalarProperty Name="Дата_рождения" ColumnName="Дата_рождения" />
+                <ScalarProperty Name="Дата_смерти" ColumnName="Дата_смерти" />
+                <ScalarProperty Name="Тип_документа" ColumnName="Тип_документа" />
+                <ScalarProperty Name="Номер" ColumnName="Номер" />
+                <ScalarProperty Name="ЕНП" ColumnName="ЕНП" />
+                <ScalarProperty Name="Дата_начала" ColumnName="Дата_начала" />
+                <ScalarProperty Name="Серия" ColumnName="Серия" />
+                <ScalarProperty Name="ID_ЗЛ" ColumnName="ID_ЗЛ" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="СМО">
+            <EntityTypeMapping TypeName="Model.СМО">
+              <MappingFragment StoreEntitySet="СМО">
+                <ScalarProperty Name="ID_СМО" ColumnName="ID_СМО" />
+                <ScalarProperty Name="Название" ColumnName="Название" />
+                <ScalarProperty Name="Код_субъекта" ColumnName="Код_субъекта" />
+                <ScalarProperty Name="Субъект_федерации" ColumnName="Субъект федерации" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Состтояние_на_учёте">
+            <EntityTypeMapping TypeName="Model.Состтояние_на_учёте">
+              <MappingFragment StoreEntitySet="Состтояние на учёте">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ID_ЗЛ" ColumnName="ID_ЗЛ" />
+                <ScalarProperty Name="Дата_постановки" ColumnName="Дата_постановки" />
+                <ScalarProperty Name="Дата_снятия" ColumnName="Дата_снятия" />
+                <ScalarProperty Name="ID_СМО" ColumnName="ID_СМО" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Коды_субъектов">
+            <EntityTypeMapping TypeName="Model.Коды_субъектов">
+              <MappingFragment StoreEntitySet="Коды субъектов">
+                <ScalarProperty Name="Код" ColumnName="Код" />
+                <ScalarProperty Name="Название" ColumnName="Название" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="Хранилище Model.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="Хранилище Model.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="Хранилище Model.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="Хранилище Model.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="Хранилище Model.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="Хранилище Model.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="Хранилище Model.sp_upgraddiagrams" />
+          <FunctionImportMapping FunctionImportName="Выбор_СМО" FunctionName="Хранилище Model.Выбор_СМО" />
+          <FunctionImportMapping FunctionImportName="Добавление_пользователя" FunctionName="Хранилище Model.Добавление_пользователя" />
+          <FunctionImportMapping FunctionImportName="Изменение_паспорта" FunctionName="Хранилище Model.Изменение_паспорта" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="f82110742da34871b85cd8635d4e5ad4" Name="Diagram1">
+        <EntityTypeShape EntityType="Model.sysdiagrams" Width="1.5" PointX="11.375" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.ДПФС" Width="1.5" PointX="3.25" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Застрахованное_лицо" Width="1.5" PointX="3.375" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Персоналные_данные" Width="1.5" PointX="1" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.СМО" Width="1.5" PointX="5.5" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Состтояние_на_учёте" Width="1.5" PointX="5.5" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Коды_субъектов" Width="1.5" PointX="1" PointY="5.125" IsExpanded="true" />
+        <AssociationConnector Association="Model.FK_ДПФС_Застрахованное_лицо" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_Застрахованное_лицо_Застрахованное_лицо" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_Персоналные_данные_Застрахованное_лицо" ManuallyRouted="false" >
+        </AssociationConnector>
+        <AssociationConnector Association="Model.FK_Состтояние_на_учёте_Застрахованное_лицо" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_Состтояние_на_учёте_СМО" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
